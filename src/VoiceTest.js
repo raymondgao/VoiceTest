@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
@@ -9,6 +8,7 @@ import MyVietnameseWords from './MyVietnameseWords';
 import Toast from 'react-native-simple-toast';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import SystemSetting from 'react-native-system-setting';
 
 
 import {
@@ -17,12 +17,13 @@ import {
   View,
   TouchableOpacity,
   Switch,
+  Button,
   TextInput,
   AppRegistry,
   SafeAreaView,
 } from 'react-native';
 
-export default class VoiceNative extends React.Component {
+export default class VoiceTest extends React.Component {
   constructor(props) {
     super(props);
     this.myWords = MyVietnameseWords.words
@@ -38,6 +39,7 @@ export default class VoiceNative extends React.Component {
       pressStatus: false,
       isViet: true,
       language: '',
+      pitch: 1.0,
       firstLanguage: '',
       secondLanguage: '',
       language: "Vietnamese",
@@ -56,8 +58,10 @@ export default class VoiceNative extends React.Component {
     Voice.onSpeechStart = this.onSpeechStart.bind(this);
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
     Voice.onSpeechResults = this.onSpeechResults.bind(this);
-    Tts.setDefaultRate(0.4);
-    Tts.setDefaultPitch(1.0);
+    
+    
+    Tts.setDefaultRate(0.2);
+    
 
     this.speakWord();
 
@@ -92,17 +96,34 @@ export default class VoiceNative extends React.Component {
    async speakWord() {
     try {
       Tts.stop();
+      var currentVolume;
+      SystemSetting.getVolume('notification').then((volume)=>{
+        currentVolume =  volume;
+    });
       Tts.getInitStatus().then(() => {
+        Tts.setDefaultPitch(this.state.pitch);
         if (this.state.isViet == false) {
            Tts.setDefaultLanguage('en-US');
-           Tts.speak(Object.keys(this.myWords)[this.state.random]);
+           Tts.speak(Object.keys(this.myWords)[this.state.random],{
+            androidParams: {
+              KEY_PARAM_PAN: -1,
+              KEY_PARAM_VOLUME: currentVolume,
+             
+            },
+          });
 
         } else {
-          var lang = this.state.language == 'Chinese' ? 'zh-CN' : 'vi-VN';
+          var lang = this.state.language == 'Chinese' ? 'zh' : 'vi-VN';
+          
            Tts.setDefaultLanguage(lang);
-           Tts.speak(Object.values(this.myWords)[this.state.random]);
-        }
-       
+           Tts.speak(Object.values(this.myWords)[this.state.random],{
+            androidParams: {
+              KEY_PARAM_PAN: -1,
+              KEY_PARAM_VOLUME: currentVolume,
+              
+            },
+          });
+        }       
 
       });
     }
@@ -130,10 +151,11 @@ export default class VoiceNative extends React.Component {
       pressStatus: true,
     });
     try {
-      var lang = this.state.language == 'Chinese' ? 'zh-CN' : 'vi-VN';
+      var lang = this.state.language == 'Chinese' ? 'zh' : 'vi-VN';
       if (this.state.isViet == false) {
         lang = 'en-US';
       }
+     
       await Voice.start(lang);
     } catch (e) {
       console.error(e);
@@ -202,6 +224,10 @@ export default class VoiceNative extends React.Component {
   componentWillUnmount() {
     Voice.destroy().then(Voice.removeAllListeners);
   }
+
+
+
+  
   onSpeechStart(e) {
     this.setState({
       started: '√',
@@ -280,24 +306,26 @@ export default class VoiceNative extends React.Component {
     }
   }
 
-
+  static navigationOptions = { headerShown: false }
 
   render() {
+   
     let data = [{
       value: 'Chinese',
     }, {
       value: 'Vietnamese',
     }];
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={{ flex: 0.16,  marginLeft: hp('2%'), }}>
+    
+      <SafeAreaView style={styles.container}>   
+        <View style={{ flex: 0.16, width: wp('33%'), marginLeft: hp('2%'), }}>
+        
           <Dropdown
             label='Language'
-            flex={0.3}
+            flex={1}
             data={data}
-            dropdownOffset={{ top:  20, left: 0 }}
+            dropdownOffset={{ top:  20, left: 20 }}
             dropdownPosition={-3.5}
-
             onChangeText
             valueExtractor={({ value }) => value}
             onChangeText={(value) => { this.onChangeText(value) }}
@@ -357,7 +385,6 @@ export default class VoiceNative extends React.Component {
             </View>
           </View>
 
-
           <MaterialCommunityIcons name="school" style={styles.icon} size={30} color={'#2196F3'} type="MaterialCommunityIcons"></MaterialCommunityIcons>
           <Text style={styles.language}>{this.state.language}</Text>
         </View>
@@ -370,6 +397,7 @@ export default class VoiceNative extends React.Component {
 
         </View>
       </SafeAreaView>
+     
     );
   }
 }
@@ -593,6 +621,7 @@ const styles = StyleSheet.create({
   },
 
   materialContainerSwitch: {
+    flex: 0.11,
     alignItems: "center",
     justifyContent: "center"
   },
@@ -609,7 +638,9 @@ const styles = StyleSheet.create({
     },
     elevation: 0,
     opacity: 0.63,
-    marginTop: -(wp('170%')),
+    alignSelf: 'flex-start',
+   
+    marginTop: -(hp('85%')),
     left: wp('74%'),
   },
   switch1: {
@@ -626,4 +657,7 @@ const styles = StyleSheet.create({
     opacity: 0.94
   },
 });
-AppRegistry.registerComponent('VoiceNative', () => VoiceNative);
+AppRegistry.registerComponent('VoiceTest', () => VoiceTest);
+
+
+
