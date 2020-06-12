@@ -131,8 +131,10 @@ android {
         applicationId "com.voicetest"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "1.5"
+        signingConfig signingConfigs.debug
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -149,6 +151,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('keystore')
+            storePassword 'onceintime'
+            keyAlias = 'keystore'
+            keyPassword 'onceintime'
+        }
     }
     buildTypes {
         debug {
@@ -157,14 +165,13 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
-        productionrelease {
-            initWith release
-        }
+
     }
+    buildToolsVersion = buildToolsVersion
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -182,11 +189,15 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-reanimated')
+    implementation project(':react-native-system-setting')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-restart')
     implementation project(':react-native-tts')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.android.support:multidex:1.0.3'
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
@@ -207,7 +218,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
 project.ext.envConfigFiles = [
         debug: ".env",
         release: ".env",
-        productionrelease: ".env.production"
 ]
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

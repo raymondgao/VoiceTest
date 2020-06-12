@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import MyWebView from './WebView';
 import {
   StyleSheet,
   Text,
@@ -7,7 +8,18 @@ import {
   TouchableOpacity
 } from 'react-native';
 
+
 export default class Profile extends Component {
+  constructor(props) {
+    super(props);
+  this.handlePress = this.handlePress.bind(this);
+  }
+
+  handlePress(){
+
+    let url = "https://www.facebook.com";
+    this.props.navigation.navigate('WebView',{ url },);
+  }
 
   render() {
     return (
@@ -20,7 +32,7 @@ export default class Profile extends Component {
               <Text style={styles.info}>English Teacher</Text>
               <Text style={styles.description}>Pronouncation, grammar, and business English. Lesson price start at $10/hour.</Text>
               
-              <TouchableOpacity style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.buttonContainer} onPress={this.handlePress}>
                 <Text>Visit WebSite</Text>  
               </TouchableOpacity>              
               <TouchableOpacity style={styles.buttonContainer}>

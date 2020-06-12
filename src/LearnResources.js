@@ -10,7 +10,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import SystemSetting from 'react-native-system-setting';
 
-
 import {
   StyleSheet,
   Text,
@@ -23,7 +22,9 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-export default class VoiceTest extends React.Component {
+var Login = require('./Login');
+
+export default class LearnResource extends React.Component {
   constructor(props) {
     super(props);
     this.myWords = MyVietnameseWords.words
@@ -306,7 +307,7 @@ export default class VoiceTest extends React.Component {
     }
   }
 
-  static navigationOptions = { headerShown: false }
+  static navigationOptions = { headerShown: false };
 
   render() {
    
@@ -315,11 +316,12 @@ export default class VoiceTest extends React.Component {
     }, {
       value: 'Vietnamese',
     }];
+    
     return (
     
       <SafeAreaView style={styles.container}>   
         <View style={{ flex: 0.16, width: wp('33%'), marginLeft: hp('2%'), }}>
-        
+         
           <Dropdown
             label='Language'
             flex={1}
@@ -330,7 +332,11 @@ export default class VoiceTest extends React.Component {
             valueExtractor={({ value }) => value}
             onChangeText={(value) => { this.onChangeText(value) }}
           />
+        
         </View>
+       
+           
+            
         <View style={styles.materialButtonPinkRow}>
 
           <TouchableOpacity style={[skipStyles.container, styles.materialButtonSkip]} onPress={() => {
@@ -359,6 +365,7 @@ export default class VoiceTest extends React.Component {
         </View>
 
         <View style={[styles.materialContainerSwitch, styles.materialSwitch]}>
+        
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
             thumbColor={this.state.isViet ? "#f5dd4b" : "#f4f3f4"}
@@ -367,6 +374,7 @@ export default class VoiceTest extends React.Component {
             value={this.state.isViet}
             style={styles.switch1}
           ></Switch>
+        
         </View>
         <View style={tabStyles.cupertinoSegmentWithTwoTabsStack}>
 
@@ -384,9 +392,10 @@ export default class VoiceTest extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
-
+        
           <MaterialCommunityIcons name="school" style={styles.icon} size={30} color={'#2196F3'} type="MaterialCommunityIcons"></MaterialCommunityIcons>
           <Text style={styles.language}>{this.state.language}</Text>
+          <Login/>
         </View>
         <View style={[textBoxStyles.container, textBoxStyles.materialDisabledTextbox]}>
           <TextInput
@@ -394,8 +403,9 @@ export default class VoiceTest extends React.Component {
             placeholder={this.state.results.toString()}
             editable={false}
           ></TextInput>
-
+   
         </View>
+     
       </SafeAreaView>
      
     );
@@ -553,7 +563,7 @@ const tabStyles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     flexWrap: "wrap",
-    backgroundColor: "#007AFF",
+    backgroundColor: "#2196F3",
     padding: 6,
     borderWidth: 1,
     borderColor: "#007AFF",

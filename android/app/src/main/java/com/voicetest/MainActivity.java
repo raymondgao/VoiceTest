@@ -22,10 +22,13 @@ public class MainActivity extends ReactActivity {
   protected void onCreate(Bundle state){
     super.onCreate(state);
 
+
     SharedPreferences preferences =
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     //preferences.edit().putString("debug_http_host", "digital-seat-250614.ts.r.appspot.com:80").apply();
     preferences.edit().putString("debug_http_host", "10.4.5.15:8081").apply();
   }
+
+
 
 }

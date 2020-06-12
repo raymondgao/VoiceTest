@@ -43,6 +43,17 @@ target 'VoiceTest' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RCTSystemSetting', :path => '../node_modules/react-native-system-setting'
+
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+
+
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
+  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
+
   target 'VoiceTestTests' do
     inherit! :search_paths
     # Pods for testing

@@ -33,7 +33,8 @@
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
 #if DEBUG
-  return [NSURL URLWithString:@"http://10.4.5.15:8081/index.bundle?platform=ios"];
+  //return [NSURL URLWithString:@"http://10.4.5.15:8081/index.bundle?platform=ios"];
+  return [NSURL URLWithString:@"http://digital-seat-250614.ts.r.appspot.com:80/index.bundle?platform=ios"];
  // return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
