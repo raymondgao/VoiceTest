@@ -6,6 +6,8 @@ import  LearnResources from './LearnResources';
 import  ClubsNav from './ClubsNav';
 import  TeacherNav from './TeacherNav';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import codePush from "react-native-code-push";
+
 
 const Drawer = createDrawerNavigator();
 
@@ -37,4 +39,6 @@ export default class VoiceTest extends React.Component {
   );
 }
 }
+VoiceTest = codePush(VoiceTest);
+
 

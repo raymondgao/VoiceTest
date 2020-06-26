@@ -54,6 +54,8 @@ target 'VoiceTest' do
 
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
 
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
+
   target 'VoiceTestTests' do
     inherit! :search_paths
     # Pods for testing

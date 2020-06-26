@@ -6,6 +6,7 @@ import android.content.Context;
 import com.facebook.FacebookSdk;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.microsoft.codepush.react.CodePush;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
@@ -15,6 +16,7 @@ import com.facebook.soloader.SoLoader;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import com.microsoft.codepush.react.CodePush;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -25,6 +27,11 @@ public class MainApplication extends Application implements ReactApplication {
           return BuildConfig.DEBUG;
         }
 
+
+          @Override
+          protected String getJSBundleFile() {
+              return CodePush.getJSBundleFile();
+          }
 
         @Override
         protected List<ReactPackage> getPackages() {
