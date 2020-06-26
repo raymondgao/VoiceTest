@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">VoiceTest</string>
     <string name="facebook_app_id">20612375660</string>
+    <string name="fb_login_protocol_scheme">fb20612375660</string>
 </resources>

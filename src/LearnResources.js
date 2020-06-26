@@ -5,10 +5,11 @@ import RNRestart from 'react-native-restart';
 import MyChineseWords from './MyChineseWords';
 import { Dropdown } from 'react-native-material-dropdown';
 import MyVietnameseWords from './MyVietnameseWords';
-import Toast from 'react-native-simple-toast';
+//import Toast from 'react-native-simple-toast';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import SystemSetting from 'react-native-system-setting';
+import Toast from './MyToast';
 
 import {
   StyleSheet,
@@ -39,10 +40,7 @@ export default class LearnResource extends React.Component {
       buttonText: 'Speak',
       pressStatus: false,
       isViet: true,
-      language: '',
       pitch: .8,
-      firstLanguage: '',
-      secondLanguage: '',
       language: "Vietnamese",
       firstLanguage: "Vietnamese",
       secondLanguage: "English",
@@ -59,6 +57,9 @@ export default class LearnResource extends React.Component {
     Voice.onSpeechStart = this.onSpeechStart.bind(this);
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
     Voice.onSpeechResults = this.onSpeechResults.bind(this);
+    this.showIncorrectToast = this.showIncorrectToast.bind(this);
+    this.showCorrectToast = this.showCorrectToast.bind(this);
+    
     
     
     Tts.setDefaultRate(0.2);
@@ -67,6 +68,16 @@ export default class LearnResource extends React.Component {
     this.speakWord();
 
 
+  }
+
+  showIncorrectToast()
+  {
+    this.refs.incorrectToast.showToast('Sorry that is Incorrect... ', 3000);
+  }
+
+  showCorrectToast()
+  {
+    this.refs.correctToast.showToast('You are Correct...', 3000);
   }
 
   onChangeText(value) {
@@ -90,11 +101,15 @@ export default class LearnResource extends React.Component {
         currentSecondWord: Object.values(this.myWords)[random],
       });
     }
+    this.setState({
+       isViet: true,
+      });
     this.handleSkip();
   }
 
 
    async speakWord() {
+    
     try {
       Tts.stop();
       var currentVolume;
@@ -254,9 +269,7 @@ export default class LearnResource extends React.Component {
 
     e.value.forEach(function (item) {
       if (item.toLowerCase().indexOf(currentWord.toLowerCase()) !== -1) {
-
-        // Toast.showWithGravity('Correct !!\n' + e.value, Toast.LONG,Toast.CENTER);
-        Toast.showWithGravity('\n            Correct !!              \n', Toast.LONG, Toast.TOP);
+        this.showCorrectToast();
         var random = this.random();
         if (this.state.isViet) {
 
@@ -280,7 +293,9 @@ export default class LearnResource extends React.Component {
     if (found == false) {
 
       //Toast.showWithGravity('Incorrect !!\n', Toast.LONG, Toast.CENTER);
-      Toast.showWithGravity('\n         Incorrect !!        \n', Toast.LONG, Toast.CENTER);
+      
+      //Toast.showWithGravity('\n         Incorrect !!        \n', Toast.LONG, Toast.CENTER);
+      this.showIncorrectToast();
     }
     else {
       this.speakWord();
@@ -373,6 +388,7 @@ export default class LearnResource extends React.Component {
             onValueChange={this.handleSwitch}
             value={this.state.isViet}
             style={styles.switch1}
+            
           ></Switch>
         
         </View>
@@ -391,21 +407,24 @@ export default class LearnResource extends React.Component {
                 <Text style={tabStyles.titleRight}>{this.state.currentFirstWord} </Text>
               </TouchableOpacity>
             </View>
+           <Toast ref = "correctToast"   backgroundColor = "#14AB6D"/>
+           <Toast ref = "incorrectToast" backgroundColor = "#FF335E"/>
           </View>
         
           <MaterialCommunityIcons name="school" style={styles.icon} size={30} color={'#2196F3'} type="MaterialCommunityIcons"></MaterialCommunityIcons>
           <Text style={styles.language}>{this.state.language}</Text>
           <Login/>
         </View>
+        
         <View style={[textBoxStyles.container, textBoxStyles.materialDisabledTextbox]}>
           <TextInput
             style={textBoxStyles.inputStyle}
             placeholder={this.state.results.toString()}
             editable={false}
           ></TextInput>
-   
+           
         </View>
-     
+        
       </SafeAreaView>
      
     );
@@ -647,7 +666,7 @@ const styles = StyleSheet.create({
       height: 5
     },
     elevation: 0,
-    opacity: 0.63,
+    opacity: 1.03,
     alignSelf: 'flex-start',
    
     marginTop: -(hp('85%')),

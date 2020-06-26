@@ -30,7 +30,6 @@
     "react-native-restart": "0.0.17",
     "react-native-safe-area-context": "^3.0.2",
     "react-native-screens": "^2.8.0",
-    "react-native-simple-toast": "^1.1.2",
     "react-native-system-setting": "^1.7.4",
     "react-native-tab-view": "^2.14.4",
     "react-native-timeline-flatlist": "^0.7.2",
