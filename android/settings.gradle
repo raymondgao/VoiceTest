@@ -1,4 +1,12 @@
 rootProject.name = 'VoiceTest'
+include ':react-native-i18n'
+project(':react-native-i18n').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-i18n/android')
+include ':react-native-text-detector'
+project(':react-native-text-detector').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-text-detector/android')
+include ':react-native-camera'
+project(':react-native-camera').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-camera/android')
+include ':react-native-firebase-mlkit'
+project(':react-native-firebase-mlkit').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-firebase-mlkit/android')
 
 include ':react-native-fbsdk'
 project(':react-native-fbsdk').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fbsdk/android')

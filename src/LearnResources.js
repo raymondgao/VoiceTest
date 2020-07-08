@@ -25,10 +25,13 @@ import {
 
 var Login = require('./Login');
 
+
 export default class LearnResource extends React.Component {
+    
   constructor(props) {
     super(props);
     this.myWords = MyVietnameseWords.words
+    this.isLesson = false;
     var random = this.random()
     console.disableYellowBox = true;
 
@@ -39,15 +42,36 @@ export default class LearnResource extends React.Component {
       random: random,
       buttonText: 'Speak',
       pressStatus: false,
-      isViet: true,
+      isViet: true,  
       pitch: .8,
       language: "Vietnamese",
       firstLanguage: "Vietnamese",
       secondLanguage: "English",
       currentFirstWord: Object.keys(this.myWords)[random],
       currentSecondWord: Object.values(this.myWords)[random],
-
     };
+    try {
+      const  {lessons}  = this.props.route.params;
+      this.state.tableData = lessons; 
+      
+      if(lessons != null){ 
+        for (var key in this.myWords) {
+            delete this.myWords[key];
+        }
+        for (let i = 0; i < lessons.length; i++) {
+          this.myWords[lessons[i][1]] = lessons[i][0];               
+        }
+        this.isLesson = true;
+        var random = this.random();
+        this.state.random = random; 
+        this.state.currentFirstWord = Object.keys(this.myWords)[random];
+        this.state.currentSecondWord = Object.values(this.myWords)[random];
+
+      }
+    }
+    catch (error) {
+       console.log(error);
+    }
 
     this.handlePressIn = this.handlePressIn.bind(this);
     this.handlePressOut = this.handlePressOut.bind(this);
@@ -58,16 +82,9 @@ export default class LearnResource extends React.Component {
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
     Voice.onSpeechResults = this.onSpeechResults.bind(this);
     this.showIncorrectToast = this.showIncorrectToast.bind(this);
-    this.showCorrectToast = this.showCorrectToast.bind(this);
-    
-    
-    
+    this.showCorrectToast = this.showCorrectToast.bind(this);    
     Tts.setDefaultRate(0.2);
-    
-
     this.speakWord();
-
-
   }
 
   showIncorrectToast()
@@ -109,13 +126,15 @@ export default class LearnResource extends React.Component {
 
 
    async speakWord() {
-    
+   
     try {
       Tts.stop();
       var currentVolume;
       SystemSetting.getVolume('notification').then((volume)=>{
         currentVolume =  volume;
     });
+
+
       Tts.getInitStatus().then(() => {
         Tts.setDefaultPitch(this.state.pitch);
         if (this.state.isViet == false) {
@@ -155,7 +174,28 @@ export default class LearnResource extends React.Component {
     }
   }
   random() {
-    return Math.floor(Math.random() * Object.keys(this.myWords).length);
+    var wordLength = Object.keys(this.myWords).length ;
+    
+    if(this.isLesson) {
+     
+      if(wordLength == 1){
+        return 0;
+      }else
+      {       
+        var nextRandom  = (this.state.random + 1);
+
+        if (wordLength > nextRandom){
+          return nextRandom;  
+        }
+        else {
+          return 0;
+        }
+      }
+
+    }else {
+        return Math.floor(Math.random() * wordLength);
+    }
+   
   }
 
   async  handlePressIn() {
@@ -241,9 +281,6 @@ export default class LearnResource extends React.Component {
     Voice.destroy().then(Voice.removeAllListeners);
   }
 
-
-
-  
   onSpeechStart(e) {
     this.setState({
       started: '√',
@@ -338,7 +375,7 @@ export default class LearnResource extends React.Component {
         <View style={{ flex: 0.16, width: wp('33%'), marginLeft: hp('2%'), }}>
          
           <Dropdown
-            label='Language'
+            label='Languages:'
             flex={1}
             data={data}
             dropdownOffset={{ top:  20, left: 20 }}
@@ -636,9 +673,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(255,249,249,1)"
   },
-
-
-
+  
   materialButtonPinkRow: {
     
     width: "100%",

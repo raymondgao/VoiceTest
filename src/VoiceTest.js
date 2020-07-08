@@ -5,6 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import  LearnResources from './LearnResources';
 import  ClubsNav from './ClubsNav';
 import  TeacherNav from './TeacherNav';
+import  CameraNav  from './CameraNav';
+import  LessonNav  from './LessonNav'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import codePush from "react-native-code-push";
 
@@ -32,6 +34,18 @@ export default class VoiceTest extends React.Component {
           options={{
             drawerIcon: ({ focused, size }) => (
               <MaterialCommunityIcons name={'heart'}  size={25} color={'#2196F3'} />
+            )}}
+        />
+          <Drawer.Screen name="Snap Lesson" component={CameraNav} 
+          options={{
+            drawerIcon: ({ focused, size }) => (
+              <MaterialCommunityIcons name={'camera'}  size={25} color={'#2196F3'} />
+            )}}
+        />
+           <Drawer.Screen name="Show Lesson" component={LessonNav} 
+          options={{
+            drawerIcon: ({ focused, size }) => (
+              <MaterialCommunityIcons name={'book'}  size={25} color={'#2196F3'} />
             )}}
         />
       </Drawer.Navigator>
