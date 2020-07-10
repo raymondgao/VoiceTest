@@ -11,14 +11,24 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import codePush from "react-native-code-push";
 
 
+
 const Drawer = createDrawerNavigator();
 
+
 export default class VoiceTest extends React.Component {
+  constructor(props) {
+    super(props);
+   
+  }
+
+
   render(){
+   
   return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="LearnResources">
-        <Drawer.Screen name="Learn Language" component={LearnResources} 
+ 
+    <NavigationContainer  > 
+      <Drawer.Navigator initialRouteName="LearnResources"  >  
+        <Drawer.Screen name="Learn Language" component={LearnResources}  
           options={{
             drawerIcon: ({ focused, size }) => (
               <MaterialCommunityIcons name={'school'} size={25} color={'#2196F3'} />
@@ -42,7 +52,7 @@ export default class VoiceTest extends React.Component {
               <MaterialCommunityIcons name={'camera'}  size={25} color={'#2196F3'} />
             )}}
         />
-           <Drawer.Screen name="Show Lesson" component={LessonNav} 
+           <Drawer.Screen name="Show Lesson" component={LessonNav}  
           options={{
             drawerIcon: ({ focused, size }) => (
               <MaterialCommunityIcons name={'book'}  size={25} color={'#2196F3'} />
@@ -52,7 +62,9 @@ export default class VoiceTest extends React.Component {
     </NavigationContainer>
   );
 }
+
 }
+
 VoiceTest = codePush(VoiceTest);
 
 

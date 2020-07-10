@@ -10,6 +10,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import SystemSetting from 'react-native-system-setting';
 import Toast from './MyToast';
+import { NativeModules } from "react-native";
+
 
 import {
   StyleSheet,
@@ -27,14 +29,15 @@ var Login = require('./Login');
 
 
 export default class LearnResource extends React.Component {
-    
+ 
   constructor(props) {
     super(props);
     this.myWords = MyVietnameseWords.words
     this.isLesson = false;
+    this.restart = false;
     var random = this.random()
     console.disableYellowBox = true;
-
+  
     this.state = {
       recognized: '',
       started: '',
@@ -50,24 +53,40 @@ export default class LearnResource extends React.Component {
       currentFirstWord: Object.keys(this.myWords)[random],
       currentSecondWord: Object.values(this.myWords)[random],
     };
+ 
     try {
+     
       const  {lessons}  = this.props.route.params;
       this.state.tableData = lessons; 
-      
+     
       if(lessons != null){ 
-        for (var key in this.myWords) {
-            delete this.myWords[key];
-        }
+        this.restart = true;
+        var newWords = {}
         for (let i = 0; i < lessons.length; i++) {
-          this.myWords[lessons[i][1]] = lessons[i][0];               
+         let t = lessons[i][1];
+         
+         if(t == '')
+         {
+         
+           t = "[UNKNOWN]" + i;
+         }     
+         newWords[t]= lessons[i][0];
         }
+        this.myWords = newWords;
         this.isLesson = true;
+        this.restart = true;
         var random = this.random();
         this.state.random = random; 
-        this.state.currentFirstWord = Object.keys(this.myWords)[random];
+        
+        let b = Object.keys(this.myWords)[random];
+        if(b.indexOf("[UNKNOWN]") > -1){
+          b = '';
+        }
         this.state.currentSecondWord = Object.values(this.myWords)[random];
-
+        this.state.currentFirstWord = b;
+     
       }
+
     }
     catch (error) {
        console.log(error);
@@ -85,6 +104,7 @@ export default class LearnResource extends React.Component {
     this.showCorrectToast = this.showCorrectToast.bind(this);    
     Tts.setDefaultRate(0.2);
     this.speakWord();
+  
   }
 
   showIncorrectToast()
@@ -173,11 +193,13 @@ export default class LearnResource extends React.Component {
 
     }
   }
+
+
   random() {
     var wordLength = Object.keys(this.myWords).length ;
     
     if(this.isLesson) {
-     
+    
       if(wordLength == 1){
         return 0;
       }else
@@ -220,19 +242,24 @@ export default class LearnResource extends React.Component {
   }
 
   handleSkip() {
-
+  
     var random = this.random();
+
+    let t = Object.keys(this.myWords)[random];
+    if(t.indexOf("[UNKNOWN]") > -1){
+      t = '';
+    }
     if (this.state.isViet == false) {
 
       this.setState({
         currentFirstWord: Object.values(this.myWords)[random],
-        currentSecondWord: Object.keys(this.myWords)[random],
+        currentSecondWord: t,
         //isViet: false,
         random, random,
       });
     } else {
       this.setState({
-        currentFirstWord: Object.keys(this.myWords)[random],
+        currentFirstWord: t,
         currentSecondWord: Object.values(this.myWords)[random],
         //isViet: false,
         random, random,
@@ -279,6 +306,9 @@ export default class LearnResource extends React.Component {
   }
   componentWillUnmount() {
     Voice.destroy().then(Voice.removeAllListeners);
+  }
+  componentWillMount() {
+   
   }
 
   onSpeechStart(e) {
@@ -362,7 +392,7 @@ export default class LearnResource extends React.Component {
   static navigationOptions = { headerShown: false };
 
   render() {
-   
+    
     let data = [{
       value: 'Chinese',
     }, {

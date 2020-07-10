@@ -3,6 +3,7 @@ import React from 'react';
 import { AsyncStorage, StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { CommonActions } from '@react-navigation/native';
 
 export default class ListLesson extends React.Component {
 
@@ -16,6 +17,7 @@ export default class ListLesson extends React.Component {
     }
     this.onEventPressDelete = this.onEventPressDelete.bind(this);
     this.onEventPressShow = this.onEventPressShow.bind(this);
+    this.onEventPress = this.onEventPress.bind(this);
   }
 
   onEventPressShow(index) {
@@ -29,7 +31,9 @@ export default class ListLesson extends React.Component {
        lessons.push(childArray);
        
       }
-    this.props.navigation.navigate('LearnResources',{ lessons},);
+
+      
+   this.props.navigation.navigate('LearnResources',{ lessons},);
   }
 
   onEventPressDelete(index) {
@@ -42,7 +46,9 @@ export default class ListLesson extends React.Component {
   _getLessons = async () => {
     try {
         const keys =  await AsyncStorage.getAllKeys();
-        
+        this.state.lessonsArray = [];
+        this.state.tableData = [];
+
         for (let lesson of keys) {
             
             var value = await AsyncStorage.getItem(lesson);
@@ -78,7 +84,12 @@ export default class ListLesson extends React.Component {
    this._getLessons();
   }
 
+  onEventPress() {
+    this._getLessons();
+  }
+  
   render() {
+    
     const element = (lessons, index) => (
       <TouchableOpacity onPress={() => this._alertIndex(index)}>
         <View style={styles.btnTrash}>
@@ -96,7 +107,13 @@ export default class ListLesson extends React.Component {
     return (
       
       <View style={styles.container}>
-        
+        <View style={{alignItems: 'flex-end'}}>
+         <TouchableOpacity onPress={this.onEventPress}>
+            <View style={styles.btnPublish}>
+              <Text style={styles.btnTextPublish}>Refresh</Text>
+            </View>
+          </TouchableOpacity> 
+          </View>
         <Table borderStyle={{borderColor: 'transparent'}}>
           <Row data={this.state.tableHead} style={styles.head} textStyle={styles.textHead}/>
           {
@@ -127,7 +144,7 @@ const styles = StyleSheet.create({
   textBody: { margin: 6,color: "#2196F3", },
   row: { flexDirection: 'row', backgroundColor: '#FFF1C1' },
   btnTrash: {   width: 88, height: 20,  borderRadius: 3,justifyContent:'space-between', marginBottom: 20 , padding: 18},
-  btnPublish: {   width: 135, height: 49, backgroundColor: '#78B7BB',  borderRadius: 3,justifyContent:'space-between', marginBottom: 20 , padding: 18},
+  btnPublish: {   width: 105, height: 49, backgroundColor: '#78B7BB',  borderRadius: 3,justifyContent:'space-between', marginBottom: 20 , padding: 18},
   btnText: { textAlign: 'center', color: '#fff' },
   btnTextPublish: { textAlign: 'center', color: '#fff', fontSize: 14 },
   icon: {

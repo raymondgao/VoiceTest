@@ -1005,7 +1005,7 @@ class MyVietnameseWords  {
    }
 
    static getWords(){
-      return MyChineseWords.words;
+      return MyVietnameseWords.words;
    }
 }
 
