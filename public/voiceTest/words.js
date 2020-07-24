@@ -215,7 +215,7 @@ var words = [
 'What do you do at work? ',
 'I answer telephones and do some typing. ',
 'What time do you finish your work? ',
-'At 6 o’clock sharp. 6',
+'At 6 o’clock sharp',
 'What do you do in your spare time? ',
 'I like listening to pop music. ',
 'I like playing football. ',

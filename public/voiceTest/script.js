@@ -57,10 +57,12 @@ recognition.onresult = function(event) {
     //noteTextarea.val(noteContent);
   }
   
-    quote = currentQuote.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+    quote = currentQuote.replace(/[.,\/#!\’\'$%\^&\*;:{}=\-_`~()]/g,"");
     quote = quote.replace(/\s{2,}/g," ");
-    quote  = quote.toLowerCase();
+    quote = quote.toLowerCase();
+    quote = quote.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
     transcript = transcript.toLowerCase();
+    transcript = transcript.replace(/[.,\/#!\’\'$%\^&\*;:{}=\-_`~()]/g,"");
     result = similarity(quote, transcript);
     output = diffString(transcript,quote);
     const div = document.createElement('div');

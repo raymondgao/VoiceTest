@@ -62,7 +62,11 @@ export default class ShowLesson extends React.Component {
     return (
       
       <View style={styles.container}>
+        <View style={{alignItems: 'flex-start'}}>
+          <MaterialCommunityIcons name="send" size={30} color={'#2196F3'} type="MaterialCommunityIcons"></MaterialCommunityIcons>
+        </View>
         <View style={{alignItems: 'flex-end'}}>
+     
          <TouchableOpacity onPress={this.onEventPress}>
             <View style={styles.btnPublish}>
               <Text style={styles.btnTextPublish}>Prepare Lesson</Text>

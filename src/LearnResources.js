@@ -50,8 +50,8 @@ export default class LearnResource extends React.Component {
       language: "Vietnamese",
       firstLanguage: "Vietnamese",
       secondLanguage: "English",
-      currentFirstWord: Object.keys(this.myWords)[random],
-      currentSecondWord: Object.values(this.myWords)[random],
+      currentFirstWord: Object.keys(this.myWords)[random].replace(":","\n"),
+      currentSecondWord: Object.values(this.myWords)[random].replace(":","\n"),
     };
  
     try {
@@ -82,7 +82,7 @@ export default class LearnResource extends React.Component {
         if(b.indexOf("[UNKNOWN]") > -1){
           b = '';
         }
-        this.state.currentSecondWord = Object.values(this.myWords)[random];
+        this.state.currentSecondWord = Object.values(this.myWords)[random].replace(":","\n");
         this.state.currentFirstWord = b;
      
       }
@@ -103,7 +103,7 @@ export default class LearnResource extends React.Component {
     this.showIncorrectToast = this.showIncorrectToast.bind(this);
     this.showCorrectToast = this.showCorrectToast.bind(this);    
     Tts.setDefaultRate(0.2);
-    this.speakWord();
+    this.speakWord(false);
   
   }
 
@@ -125,8 +125,8 @@ export default class LearnResource extends React.Component {
         language: "Chinese",
         firstLanguage: "Chinese",
         secondLanguage: "English",
-        currentFirstWord: Object.keys(this.myWords)[random],
-        currentSecondWord: Object.values(this.myWords)[random],
+        currentFirstWord: Object.keys(this.myWords)[random].replace(":","\n"),
+        currentSecondWord: Object.values(this.myWords)[random].replace(":","\n"),
       });
     } else if (value == "Vietnamese") {
       this.myWords = MyVietnameseWords.words;
@@ -134,8 +134,8 @@ export default class LearnResource extends React.Component {
         language: "Vietnamese",
         firstLanguage: "Vietnamese",
         secondLanguage: "English",
-        currentFirstWord: Object.keys(this.myWords)[random],
-        currentSecondWord: Object.values(this.myWords)[random],
+        currentFirstWord: Object.keys(this.myWords)[random].replace(":","\n"),
+        currentSecondWord: Object.values(this.myWords)[random].replace(":","\n"),
       });
     }
     this.setState({
@@ -145,8 +145,9 @@ export default class LearnResource extends React.Component {
   }
 
 
-   async speakWord() {
+   async speakWord(bSpeak = true) {
    
+    var desireVolume  = .8
     try {
       Tts.stop();
       var currentVolume;
@@ -171,7 +172,12 @@ export default class LearnResource extends React.Component {
           var lang = this.state.language == 'Chinese' ? 'zh' : 'vi-VN';
           
            Tts.setDefaultLanguage(lang);
-           Tts.speak(Object.values(this.myWords)[this.state.random],{
+           let word = Object.values(this.myWords)[this.state.random];
+           word = word.split(':')[0];
+           if ((currentVolume < 0.1) && (bSpeak == true)){
+            currentVolume = desireVolume;
+           }
+           Tts.speak(word,{
             androidParams: {
               KEY_PARAM_PAN: -1,
               KEY_PARAM_VOLUME: currentVolume,
@@ -183,6 +189,7 @@ export default class LearnResource extends React.Component {
       });
     }
     catch (err) {
+      error(error);
       if (err.code === 'no_engine') {
         Tts.requestInstallEngine();
       }
@@ -334,6 +341,7 @@ export default class LearnResource extends React.Component {
 
     var found = false;
 
+    currentWord  = currentWord.split(':')[0];
     e.value.forEach(function (item) {
       if (item.toLowerCase().indexOf(currentWord.toLowerCase()) !== -1) {
         this.showCorrectToast();
@@ -342,16 +350,16 @@ export default class LearnResource extends React.Component {
 
           this.setState({
             random: random,
-            currentFirstWord: Object.keys(this.myWords)[random],
-            currentSecondWord: Object.values(this.myWords)[random],
+            currentFirstWord: Object.keys(this.myWords)[random].replace(":","\n"),
+            currentSecondWord: Object.values(this.myWords)[random].replace(":","\n"),
           });
         }
         else {
 
           this.setState({
             random: random,
-            currentFirstWord: Object.values(this.myWords)[random],
-            currentSecondWord: Object.keys(this.myWords)[random],
+            currentFirstWord: Object.values(this.myWords)[random].replace(":","\n"),
+            currentSecondWord: Object.keys(this.myWords)[random].replace(":","\n"),
           });
         }
         found = true;
@@ -466,12 +474,12 @@ export default class LearnResource extends React.Component {
               <TouchableOpacity /* Conditional navigation not supported at the moment */
                 style={tabStyles.segmentTextWrapperLeft}
               >
-                <Text style={tabStyles.titleLeft}> {this.state.currentSecondWord} </Text>
+                <Text style={tabStyles.titleLeft}> {this.state.currentSecondWord.replace(":","\n")} </Text>
               </TouchableOpacity>
               <TouchableOpacity /* Conditional navigation not supported at the moment */
                 style={tabStyles.segmentTextWrapperRight}
               >
-                <Text style={tabStyles.titleRight}>{this.state.currentFirstWord} </Text>
+                <Text style={tabStyles.titleRight}>{this.state.currentFirstWord.replace(":","\n")} </Text>
               </TouchableOpacity>
             </View>
            <Toast ref = "correctToast"   backgroundColor = "#14AB6D"/>
