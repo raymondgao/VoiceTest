@@ -26,7 +26,7 @@ public class MainActivity extends ReactActivity {
     SharedPreferences preferences =
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     //preferences.edit().putString("debug_http_host", "digital-seat-250614.ts.r.appspot.com:80").apply();
-    preferences.edit().putString("debug_http_host", "10.4.5.42:8081").apply();
+    preferences.edit().putString("debug_http_host", "192.168.33.107:8081").apply();
   }
 
 

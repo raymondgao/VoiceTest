@@ -60,9 +60,10 @@ target 'VoiceTest' do
 
   pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
-  pod 'RNTextDetector', :path => '../node_modules/react-native-text-detector'
 
   pod 'RNI18n', :path => '../node_modules/react-native-i18n'
+
+  pod 'RNTextDetector', :path => '../node_modules/rn-text-detector'
 
   target 'VoiceTestTests' do
     inherit! :search_paths

@@ -7,6 +7,10 @@ import com.facebook.FacebookSdk;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.fetchsky.RNTextDetector.RNTextDetectorPackage;
+import com.fetchsky.RNTextDetector.RNTextDetectorPackage;
+import com.fetchsky.RNTextDetector.RNTextDetectorPackage;
+import com.mlkit.RNMlKitPackage;
+import com.fetchsky.RNTextDetector.RNTextDetectorPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
@@ -20,6 +24,8 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.microsoft.codepush.react.CodePush;
+import com.fetchsky.RNTextDetector.RNTextDetectorPackage;
+
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -44,6 +50,7 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
            // packages.add(new RNMlKitPackage());
+           // packages.add( new RNTextDetectorPackage());
           return packages;
         }
 

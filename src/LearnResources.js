@@ -11,11 +11,13 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import SystemSetting from 'react-native-system-setting';
 import Toast from './MyToast';
 import { NativeModules } from "react-native";
+import { Dimensions } from "react-native";
 
 
 import {
   StyleSheet,
   Text,
+  Image,
   View,
   TouchableOpacity,
   Switch,
@@ -26,7 +28,8 @@ import {
 } from 'react-native';
 
 var Login = require('./Login');
-
+const win = Dimensions.get('window');
+const imagePath ='./img/';
 
 export default class LearnResource extends React.Component {
  
@@ -37,8 +40,13 @@ export default class LearnResource extends React.Component {
     this.restart = false;
     var random = this.random()
     console.disableYellowBox = true;
-  
+    
+    
+    
     this.state = {
+     
+      listImages: [ require(imagePath + 'noodle.jpeg'), require(imagePath +  'water.jpeg'), require(imagePath + 'bread.jpeg')],
+      imageIndex: 0,
       recognized: '',
       started: '',
       results: ['Here is what you said:'],
@@ -117,8 +125,16 @@ export default class LearnResource extends React.Component {
     this.refs.correctToast.showToast('You are Correct...', 3000);
   }
 
+  clearText(){
+    this.setState({
+      results: ''
+    });
+  }
+
+
   onChangeText(value) {
     var random = this.random();
+    this.randomImage();
     if (value == "Chinese") {
       this.myWords = MyChineseWords.words;
       this.setState({
@@ -157,9 +173,13 @@ export default class LearnResource extends React.Component {
 
 
       Tts.getInitStatus().then(() => {
+        if ((currentVolume < 0.1) && (bSpeak == true)){
+          currentVolume = desireVolume;
+         }
         Tts.setDefaultPitch(this.state.pitch);
         if (this.state.isViet == false) {
            Tts.setDefaultLanguage('en-US');
+    
            Tts.speak(Object.keys(this.myWords)[this.state.random],{
             androidParams: {
               KEY_PARAM_PAN: -1,
@@ -174,9 +194,7 @@ export default class LearnResource extends React.Component {
            Tts.setDefaultLanguage(lang);
            let word = Object.values(this.myWords)[this.state.random];
            word = word.split(':')[0];
-           if ((currentVolume < 0.1) && (bSpeak == true)){
-            currentVolume = desireVolume;
-           }
+           
            Tts.speak(word,{
             androidParams: {
               KEY_PARAM_PAN: -1,
@@ -189,6 +207,7 @@ export default class LearnResource extends React.Component {
       });
     }
     catch (err) {
+      console.log(err);
       error(error);
       if (err.code === 'no_engine') {
         Tts.requestInstallEngine();
@@ -201,6 +220,20 @@ export default class LearnResource extends React.Component {
     }
   }
 
+  randomImage(){
+    var imageListLength = this.state.listImages.length;
+    while (true){
+       var newImageIndex = Math.floor(Math.random() * (imageListLength ));
+       console.log(this.state.imagePath + this.state.listImages[this.state.imageIndex]);
+       if (this.state.imageIndex !=  newImageIndex) {
+        this.setState({
+          imageIndex: newImageIndex,
+         });
+         break;
+       }
+    }
+   
+  }
 
   random() {
     var wordLength = Object.keys(this.myWords).length ;
@@ -251,7 +284,7 @@ export default class LearnResource extends React.Component {
   handleSkip() {
   
     var random = this.random();
-
+    this.randomImage();
     let t = Object.keys(this.myWords)[random];
     if(t.indexOf("[UNKNOWN]") > -1){
       t = '';
@@ -346,6 +379,7 @@ export default class LearnResource extends React.Component {
       if (item.toLowerCase().indexOf(currentWord.toLowerCase()) !== -1) {
         this.showCorrectToast();
         var random = this.random();
+        this.randomImage();
         if (this.state.isViet) {
 
           this.setState({
@@ -492,13 +526,27 @@ export default class LearnResource extends React.Component {
         </View>
         
         <View style={[textBoxStyles.container, textBoxStyles.materialDisabledTextbox]}>
-          <TextInput
+         
+          <Image
+              style={{
+                width: win.width/2,
+                height: win.width/2,
+                resizeMode: "contain",
+                alignSelf: "center",
+                borderWidth: 1,
+                borderRadius: 10,
+              }}
+              //source={require('./img' + '/bread.jpeg')}
+              source={this.state.listImages[this.state.imageIndex] } 
+              resizeMode="stretch"
+            />
+             <TextInput
             style={textBoxStyles.inputStyle}
             placeholder={this.state.results.toString()}
             editable={false}
           ></TextInput>
-           
         </View>
+        
         
       </SafeAreaView>
      

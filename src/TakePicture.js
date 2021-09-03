@@ -1,5 +1,5 @@
 
-import RNTextDetector from "react-native-text-detector";
+import RNTextDetector from "rn-text-detector";
 import React from 'react';
 import Toast from './MyToast';
 let SQLite = require('react-native-sqlite-storage')
@@ -181,24 +181,38 @@ export default class TakePicture extends React.Component {
 
   takePicture = async function() {
     if (this.camera) {
-      const options = { quality: 0.8, base64: true, skipProcessing: true, forceUpOrientation: true };
       
-      const data = await this.camera.takePictureAsync(options);
-
+      var visionResp;
       // for on-device (Supports Android and iOS)
-      const deviceTextRecognition = await RNTextDetector.detectFromUri(data.uri); 
-      
+      detectText = async () => {
+        try {
+          const options = {
+            quality: 0.8,
+            base64: true,
+            skipProcessing: true,
+          };
+         
+          const { uri } = await this.camera.takePictureAsync(options);
+           var visionResp = await RNTextDetector.detectFromUri(uri);
+          
+     
+          console.log('visionResp', visionResp);
+        } catch (e) {
+          console.warn(e);
+        }
+      };
+      console.log(detectText);
       //this.props.navigation.navigate('ShowLesson',{ deviceTextRecognition },);
       // for cloud (At the moment supports only Android)
       
       var words = {}; 
       let queries = [];
       var lessons = [];
-      for(var key in deviceTextRecognition){  
+      for(var key in visionResp){  
        /* while ((m = regex.exec(deviceTextRecognition[key].blockText)) !== null) {
           lessons.push([ m[1].trim(), m[2].trim(),'' ]);
         }*/
-        let t = deviceTextRecognition[key].text.toLowerCase();
+        let t = visionResp[key].text.toLowerCase();
        
         words[t] = '';
         let query = {
@@ -223,27 +237,7 @@ export default class TakePicture extends React.Component {
     }
   };
 
-  takeVideo = async () => {
-    const { isRecording } = this.state;
-    if (this.camera && !isRecording) {
-      try {
-        const promise = this.camera.recordAsync(this.state.recordOptions);
-
-        if (promise) {
-          this.setState({ isRecording: true });
-          const data = await promise;
-          
-      // for on-device (Supports Android and iOS)
-          const deviceTextRecognition = await RNMlKit.deviceTextRecognition(data.uri); 
-          console.log(deviceTextRecognition);
-          //console.warn('takeVideo', data);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  };
-
+  
   toggle = value => () => this.setState(prevState => ({ [value]: !prevState[value] }));
 
   facesDetected = ({ faces }) => this.setState({ faces });
